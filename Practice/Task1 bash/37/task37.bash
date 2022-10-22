@@ -23,7 +23,7 @@ EOF
 fi
 
 if [[ ($1 == "--help") ]]; then
-	echo "Usage: task2.bash URL or *.html"
+	echo "Usage: task37.bash URL or *.html"
 	echo "Select the 100 most used words in HTML text"
 	exit 0
 fi
