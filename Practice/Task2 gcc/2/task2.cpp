@@ -28,9 +28,9 @@ int main(int argc, char **argv)
   			{
       				fs::path target = argv[2] / fileToCopy.filename(); 
         			fs::copy_file(p,target,fs::copy_options::overwrite_existing); 
+				//static_cast<void>(std::system("tree"));
       			}
     		} 			
-	static_cast<void>(std::system("tree"));
 	}
 	return 0;
 }
