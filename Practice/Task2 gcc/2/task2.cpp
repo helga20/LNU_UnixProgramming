@@ -24,21 +24,13 @@ int main(int argc, char **argv)
 		for (const auto & p : fs::recursive_directory_iterator(argv[1])) 
     		{	
      			fs::path fileToCopy = p; 
-			//std::cout << "FileToCopy: " << fileToCopy << std::endl;
-			//std::cout << "1 FileToCopy.ext: " << fileToCopy.extension() << std::endl;
-			//std::cout << "argv[3]: " << argv[3] << std::endl;
-
       			if (fileToCopy.extension() == argv[3])
   			{
-				//std::cout << "FileToCopy.ext: " << fileToCopy.extension() << std::endl;
       				fs::path target = argv[2] / fileToCopy.filename(); 
         			fs::copy_file(p,target,fs::copy_options::overwrite_existing); 
-      				//fs::copy_file(p, target);
-				//fs::rename(p, target);
 				//static_cast<void>(std::system("tree"));
 			}
-		}
-		
+		}	
 	}
 	return 0;
 }
