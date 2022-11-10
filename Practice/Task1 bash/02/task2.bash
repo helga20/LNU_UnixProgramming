@@ -11,7 +11,7 @@ if [[ ($1 == "--test") ]]; then
 	touch $from/3.cpp
 	touch $from/subdir/4.cpp
 	./task2.bash $from $to cpp
-	if [[ -e $to/3.cpp && -e $to/4.cpp && ! -e $to/1.txt && ! -e $to/2.txt ]]; then
+	if [[ ! -e $to/1.txt && ! -e $to/2.txt && -e $to/3.c && -e $to/4.c && -e $from/1.txt && -e $from/2.txt && -e $from/3.c && -e $from/subdir/4.c ]]; then
 		echo "test passed"
 	else
 		echo "test failed"
