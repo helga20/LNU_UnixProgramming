@@ -1,0 +1,309 @@
+/* 1 QFILE check if file exists
+#include <QString>
+#include <QFile>
+#include <QFileInfo>
+#include <QDebug>
+
+int main()
+{
+    QString fileName("./1.txt");
+    QFile file(fileName);
+
+    if(QFileInfo::exists(fileName))
+    {
+        qDebug () << "file exists" << Qt::endl;
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QString data =  file.readAll();
+        qDebug () << "data in file:" << data << Qt::endl;
+        file.close();
+    }
+    else
+    {
+        qDebug () << "file does not exists" << Qt::endl;
+        file.open(QIODevice::ReadWrite | QIODevice::Text);
+        file.write("Qt Programming");
+        qDebug()<<"file created"<< Qt::endl;
+        file.close();
+    }
+}
+*//
+
+/*
+// 2 QDIRITERATOR byteArray == "abcdef"
+#include <QByteArray>
+#include <QBuffer>
+#include <iostream>
+#include <QDebug>
+
+#include <QApplication>
+#include<QDataStream>
+int main()
+{
+    QByteArray byteArray("abc");
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    buffer.seek(3);
+    buffer.write("def", 3);
+    qDebug() << byteArray;
+    buffer.close();
+
+}
+*/
+
+/*
+//3 QABSTRACTSOCKET QT += network
+#include "example.h":
+#ifndef EXAMPLE_H
+#define EXAMPLE_H
+#include <QObject>
+#include <QTcpSocket>
+#include <QAbstractSocket>
+#include <QDebug>
+
+class MyTcpSocket : public QObject
+{
+    Q_OBJECT
+public:
+   explicit MyTcpSocket(QObject *parent=0);
+   void doConnect();
+signals:
+
+public slots:
+   void connected();
+   void disconnected();
+   void bytesWritten(qint64 bytes);
+   void readyRead();
+
+private:
+    QTcpSocket *socket;
+};
+
+#endif // EXAMPLE_H
+
+.cpp:
+#include "example.h"
+#include <QCoreApplication>
+
+MyTcpSocket::MyTcpSocket(QObject *parent) :
+    QObject(parent)
+{
+}
+void MyTcpSocket::doConnect()
+{
+    socket = new QTcpSocket(this);
+
+    connect(socket, SIGNAL(connected()),this, SLOT(connected()));
+    connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
+    connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
+    connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
+
+    qDebug() << "connecting...";
+
+    socket->connectToHost("google.com", 80);
+
+    if(!socket->waitForConnected(5000))
+    {
+        qDebug() << "Error: " << socket->errorString();
+    }
+}
+
+void MyTcpSocket::connected()
+{
+    qDebug() << "connected...";
+    socket->write("HEAD / HTTP/1.0\r\n\r\n\r\n\r\n");
+}
+
+void MyTcpSocket::disconnected()
+{
+    qDebug() << "disconnected...";
+}
+
+void MyTcpSocket::bytesWritten(qint64 bytes)
+{
+    qDebug() << bytes << " bytes written...";
+}
+
+void MyTcpSocket::readyRead()
+{
+    qDebug() << "reading...";
+    qDebug() << socket->readAll();
+}
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    MyTcpSocket s;
+    s.doConnect();
+
+    return a.exec();
+}
+
+*/
+
+/*
+//4 QProcess 
+#include <iostream>
+#include <QProcess>
+
+using namespace std;
+
+int main()
+{
+    cout<<"\n * Program to demonstrate the usage of linux commands in qt * \n";
+
+    QProcess OProcess;
+    QString Command;    //Contains the command to be executed
+    QStringList args;   //Contains arguments of the command
+
+    Command = "ls";
+    args<<"-l"<<"/home/osboxes";
+
+    OProcess.start(Command,args,QIODevice::ReadOnly); //Starts execution of command
+    OProcess.waitForFinished();                       //Waits for execution to complete
+
+    QString StdOut      =   OProcess.readAllStandardOutput();  //Reads standard output
+    QString StdError    =   OProcess.readAllStandardError();   //Reads standard error
+
+    cout<<endl<<StdOut.toStdString();
+    cout<<endl<<StdError.toStdString();
+
+    cout<<"\n\n";
+    return 0;
+}
+
+*/
+
+/*
+//5 QDIR check if dir exists
+#include <QCoreApplication>
+#include <QDebug>
+#include <QDir>
+#include <QString>
+#include <QStandardPaths>
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    QDir mDir;
+    const QString& mpath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QDir dir(mpath);
+    if (dir.exists("newdir"))
+    {
+        qDebug() <<"Dir exists";
+    }
+    else if (!dir.exists("newdir"))
+    {
+        qDebug() <<"Dir not exists";
+    }
+    /*if (dir.mkdir("newdir"))
+    {
+        mDir.mkpath(mpath);
+        qDebug() <<"Created";
+    }
+    else if (dir.exists("newdir"))
+    {
+        qDebug() <<"Already existed";
+    }
+    else
+    {
+        qDebug()<<"Directory could not be created";
+    }*/
+    return a.exec();
+}
+*/
+
+/*
+// 6 QDIRITERATOR
+#include <QDirIterator>
+#include <QDebug>
+int main()
+{
+    QDirIterator it("/etc", QDirIterator::Subdirectories);
+    while (it.hasNext())
+    {
+        qDebug() << it.next();
+    }
+}
+
+*/
+
+/*
+// 7 QFILEINFO
+#include <QFileInfo>
+#include <QString>
+#include <QDebug>
+int main()
+{
+      QString filename = "1.txt";
+      QFileInfo fileinfo{filename};
+      QString absPath = fileinfo.absoluteFilePath();
+      QString baseName = fileinfo.baseName();
+      QString compBaseName = fileinfo.completeBaseName();
+      QString fileName = fileinfo.fileName();
+      QString suffix = fileinfo.suffix();
+      QString compSuffix = fileinfo.completeSuffix();
+
+      qDebug() << "Absolute file path: " << absPath << Qt::endl;
+      qDebug() << "Base name: " << baseName << Qt::endl;
+      qDebug() << "Complete base name: " << compBaseName << Qt::endl;
+      qDebug() << "File name: " << fileName << Qt::endl;
+      qDebug() << "Suffix: " << suffix << Qt::endl;
+      qDebug() << "Whole suffix: " << compSuffix << Qt::endl;
+}
+*/
+
+
+/* 8 stream: reading a text file
+#include <QFile>
+#include <QIODevice>
+#include <QTextStream>
+#include <QString>
+#include <QDebug>
+
+int main()
+{
+    QFile file ("1.txt");
+    if (file.open(QIODevice :: ReadOnly))
+    {
+        QTextStream stream (& file);
+        QString str;
+        while (! stream.atEnd())
+        {
+            str = stream.readLine();
+            qDebug () << str;
+        }
+        if (stream.status () != QTextStream :: Ok)
+        {
+            qDebug () << "Error";
+        }
+        file.close();
+    }
+}
+*/
+
+/* 9 stream: write in file
+#include <QFile>
+#include <QIODevice>
+#include <QTextStream>
+#include <QString>
+#include <QDebug>
+
+int main()
+{
+     QFile file ("1.txt");
+     QString str = "olia kravets";
+
+    if (file.open(QIODevice :: WriteOnly))
+    {
+        QTextStream stream (& file);
+        stream << str.toUpper();
+        file.close();
+
+        if (stream.status () != QTextStream :: Ok)
+        {
+            qDebug () << "Error";
+        }
+    }
+}
+*/
+
+
